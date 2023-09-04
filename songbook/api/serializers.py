@@ -1,7 +1,7 @@
 import base64
 
 from django.core.files.base import ContentFile
-from songs.models import Book, Group, Song, User
+from songs.models import Book, Favorite, Group, Song, User
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueTogetherValidator
@@ -17,7 +17,7 @@ class Base64ImageField(serializers.ImageField):
 
 
 class SongSerializer(serializers.ModelSerializer):
-    author = SlugRelatedField(slug_field='username', read_only=True)
+    added_by = SlugRelatedField(slug_field='username', read_only=True)
     image = Base64ImageField(required=False, allow_null=True)
 
     class Meta:
@@ -40,30 +40,30 @@ class BookSerializer(serializers.ModelSerializer):
 
 
 # Разобраться, может подписки как избранное использовать
-class FollowSerializer(serializers.ModelSerializer):
+class FavoriteSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
         slug_field='username',
         queryset=User.objects.all(),
         default=serializers.CurrentUserDefault()
     )
-    following = serializers.SlugRelatedField(
-        slug_field='username',
-        queryset=User.objects.all()
+    favorites = serializers.SlugRelatedField(
+        slug_field='favorites',
+        queryset=Song.objects.all()
     )
 
-    def validate_following(self, value):
-        if value == self.context['request'].user:
-            raise serializers.ValidationError(
-                'Нельзя подписаться на самого себя.')
-        return value
+    # def validate_favorites(self, value):
+    #     if value == self.context['request'].user:
+    #         raise serializers.ValidationError(
+    #             'Нельзя подписаться на самого себя.')
+    #     return value
 
     class Meta:
         fields = '__all__'
-        model = Follow
+        model = Favorite
         validators = [
             UniqueTogetherValidator(
-                queryset=Follow.objects.all(),
-                fields=('user', 'following'),
-                message=('Подписка уже существует.')
+                queryset=Favorite.objects.all(),
+                fields=('user', 'favorites'),
+                message=('Уже добавлено в избранное.')
             )
         ]
