@@ -23,6 +23,7 @@ class Book(models.Model):
 
 
 class Song(models.Model):
+    name = models.TextField(null=True, blank=True)
     text = models.TextField()
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
     author = models.TextField(null=True, blank=True)

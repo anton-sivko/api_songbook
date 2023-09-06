@@ -23,7 +23,7 @@ class SongViewSet(viewsets.ModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(added_by=self.request.user)
 
 
 class FavoriteViewset(viewsets.ModelViewSet):
@@ -31,7 +31,7 @@ class FavoriteViewset(viewsets.ModelViewSet):
     serializer_class = FavoriteSerializer
     permission_classes = (IsAuthenticated, )
     filter_backends = (filters.SearchFilter, )
-    search_fields = ('=following__username', )
+    search_fields = ('=favorites__username', )
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
