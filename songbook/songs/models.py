@@ -23,12 +23,12 @@ class Book(models.Model):
 
 
 class Song(models.Model):
-    name = models.TextField(null=True, blank=True)
+    name = models.CharField(max_length=200, null=True, blank=True)
     text = models.TextField()
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
-    author = models.TextField(null=True, blank=True)
+    author = models.CharField(max_length=200, null=True, blank=True)
     added_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='songs')
+        User, on_delete=models.CASCADE, related_name='songs', null=True)
     image = models.ImageField(
         upload_to='songs/', null=True, blank=True)
     group = models.ForeignKey(

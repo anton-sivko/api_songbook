@@ -5,11 +5,11 @@ from songs.models import (Book, Favorite, Group, Song)
 
 @register(Song)
 class SongAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'author')
+    list_display = ('pk', 'name', 'author', 'added_by')
     search_fields = ('name', )
     fields = (
         'name', 'text', 'group', 'book',
-        'image', 'author', 'in_favorites'
+        'image', 'author', 'added_by', 'in_favorites'
     )
     readonly_fields = ('in_favorites', 'added_by')
     list_filter = ('name', 'author')
@@ -19,17 +19,18 @@ class SongAdmin(admin.ModelAdmin):
         return obj.favorite_song.count()
 
 
-# @register(Ingredient)
-# class IngredientAdmin(admin.ModelAdmin):
-#     list_display = ('pk', 'name', 'measurement_unit')
-#     list_filter = ('name', )
-#     search_fields = ('name', )
+@register(Book)
+class BookAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'title', 'slug', 'description')
+    list_filter = ('title', )
+    search_fields = ('title', )
 
 
-# @register(Tag)
-# class TagAdmin(admin.ModelAdmin):
-#     list_display = ('pk', 'name', 'color', 'slug')
-#     list_editable = ('name', 'color', 'slug')
+@register(Group)
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'title', 'slug', 'description')
+    list_filter = ('title', )
+    search_fields = ('title', )
 
 
 # @register(IngredientAmount)
